@@ -2,7 +2,7 @@ from django.test import TestCase
 from core.models import Employee, Event
 from django.test import Client
 
-from ..util import setupDb
+from ..utils.setup_DB import setup_DB
 
 
 TEST_EMPLOYEE_1 = {
@@ -19,7 +19,7 @@ TEST_EMPLOYEE_2 = {
 
 class EmployeeManagementTest(TestCase):
     def setUp(self):
-        setupDb()
+        setup_DB()
         pass
 
     def test_create_employee(self):
@@ -104,7 +104,7 @@ class EmployeeManagementTest(TestCase):
         employee_data_2["is_active"] = False
         employee = Employee.objects.create(**employee_data_2)
 
-        response = client.get(f'/api_v1/employee/',  content_type="application/json")
+        response = client.get(f'/api_v1/employee/')
         self.assertEqual(response.status_code, 200, "Failed to list active employees")
         
         all_employees = Employee.objects.filter()
@@ -116,7 +116,7 @@ class EmployeeManagementTest(TestCase):
         employee_data_1 = TEST_EMPLOYEE_1
         employee = Employee.objects.create(**employee_data_1)
 
-        response = client.get(f'/api_v1/employee/{employee.pk}/',  content_type="application/json")
+        response = client.get(f'/api_v1/employee/{employee.pk}/')
         self.assertEqual(response.status_code, 200, "Failed to get employee")
         
         employee_retrieved = response.data

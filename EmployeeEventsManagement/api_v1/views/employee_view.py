@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 
 from api_v1.serializers.employee_serializer import EmployeeSerializer, EmployeeFilterSerializer
-from core.models import Employee
+from core.models import Event, Employee
 
 
 class EmployeeView(
