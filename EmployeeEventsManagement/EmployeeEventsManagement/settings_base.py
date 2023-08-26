@@ -9,6 +9,9 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 from pathlib import Path
 
@@ -31,9 +34,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'api_v1',
     'core',
-    "corsheaders",
+    'api_v1',
+    'events_daily_report',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -128,3 +133,14 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CRONJOBS = [
+    ('* * * * *', 'events_daily_report.cron.my_cron_test_job')
+]
+
+EMAIL_BACKEND = os.environ.get('DJANGO_EMAIL_BACKEND')
+EMAIL_HOST = os.environ.get('DJANGO_EMAIL_HOST')
+EMAIL_USE_TLS = os.environ.get('DJANGO_EMAIL_USE_TLS')
+EMAIL_PORT = os.environ.get('DJANGO_EMAIL_PORT')
+#EMAIL_USE_SSL = os.environ.get('DJANGO_EMAIL_USE_SSL')
+EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_HOST_PASSWORD')
