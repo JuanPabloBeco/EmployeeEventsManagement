@@ -32,7 +32,7 @@ class Event(models.Model):
     date = models.DateField(default=timezone.now)
 
     def __str__(self):
-        return f'{self.employee.first_name} {self.employee.last_name} {self.type}'
+        return f'{self.employee.first_name} {self.employee.last_name} {self.type} - {self.date}'
     
     class Meta:
         verbose_name = ("Event")

@@ -3,7 +3,12 @@ from django.db.models import Q
 import datetime
 
 def get_events_in_range(start_date, date_range):
-    end_date = start_date + datetime.timedelta(days=date_range)
-    filters = Q(date__gte=start_date) & Q(date__lte=end_date)
-    following_events = Event.objects.filter(filters)
+    filters = Q()
+
+    temp_date = start_date 
+    for x in range(date_range+1):
+        filters |= Q(date__month=temp_date.month) & Q(date__day=temp_date.day)
+        temp_date += datetime.timedelta(days=x)
+    
+    following_events = Event.objects.filter(filters).order_by("date")
     return following_events

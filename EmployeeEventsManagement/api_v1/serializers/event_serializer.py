@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from datetime import datetime, timedelta
 from core.models import Event, Employee
 from core.utils.get_events_in_range import get_events_in_range
 

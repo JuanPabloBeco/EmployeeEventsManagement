@@ -65,7 +65,7 @@ ROOT_URLCONF = 'EmployeeEventsManagement.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'EmployeeEventsManagement/events_daily_report/templates/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -116,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Montevideo'
 
 USE_I18N = True
 
@@ -144,3 +144,5 @@ EMAIL_PORT = os.environ.get('DJANGO_EMAIL_PORT')
 #EMAIL_USE_SSL = os.environ.get('DJANGO_EMAIL_USE_SSL')
 EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_HOST_PASSWORD')
+
+EMAIL_DAILY_REPORT_SUBSCRIPTORS = ['jpbecona@gmail.com',]
