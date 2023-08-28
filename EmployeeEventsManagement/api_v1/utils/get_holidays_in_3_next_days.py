@@ -14,20 +14,20 @@ def get_holidays_in_3_next_days(date=date.today(), country="US"):
 
     is_holiday_today = get_holiday(today)
     if not is_holiday_today.get("error"):
-        are_holidays[today_str] = is_holiday_today
+        are_holidays[today_str] = is_holiday_today.get("holidays")
     else:
         return is_holiday_today
 
     is_holiday_tomorrow = get_holiday(tomorrow)
     if not is_holiday_tomorrow.get("error"):
-        are_holidays[tomorrow_str] = is_holiday_tomorrow
+        are_holidays[tomorrow_str] = is_holiday_tomorrow.get("holidays")
     else:
         return is_holiday_tomorrow
 
 
     is_holiday_day_after_tomorrow = get_holiday(day_after_tomorrow)
     if not is_holiday_day_after_tomorrow.get("error"):
-        are_holidays[day_after_tomorrow_str] = is_holiday_day_after_tomorrow
+        are_holidays[day_after_tomorrow_str] = is_holiday_day_after_tomorrow.get("holidays")
     else:
         return is_holiday_day_after_tomorrow
 
