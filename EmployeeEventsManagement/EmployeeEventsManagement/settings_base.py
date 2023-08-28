@@ -91,6 +91,13 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "holiday_cache",
+        "TIMEOUT": 86400, # Set to expire after one day
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -146,3 +153,4 @@ EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_HOST_PASSWORD')
 
 EMAIL_DAILY_REPORT_SUBSCRIPTORS = ['jpbecona@gmail.com',]
+

@@ -51,11 +51,11 @@ class FollowingEventsTest(TestCase):
         }
 
         response = client.post(f'/api_v1/event/following/', data=data, content_type="application/json")
-        self.assertEqual(response.status_code, 200, "Failed to get employee")
+        self.assertEqual(response.status_code, 200, "Failed to get events")
         
         self.assertEqual(len(response.data), 1, "Amount of events in not retrieved correctly")
 
-        employee_retrieved = response.data[0]
-        self.assertEqual(employee_retrieved["id"], event0.id, "Id not retrieved correctly")
-        self.assertEqual(employee_retrieved["date"], event0.date, "Date not retrieved correctly")
-        self.assertEqual(employee_retrieved["type"], event0.type, "Type not retrieved correctly")
+        events_retrieved = response.data[0]
+        self.assertEqual(events_retrieved["id"], event0.id, "Id not retrieved correctly")
+        self.assertEqual(events_retrieved["date"], event0.date, "Date not retrieved correctly")
+        self.assertEqual(events_retrieved["type"], event0.type, "Type not retrieved correctly")

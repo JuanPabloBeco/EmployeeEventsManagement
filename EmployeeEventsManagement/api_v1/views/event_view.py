@@ -1,14 +1,10 @@
 from rest_framework.response import Response
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from rest_framework import status
-from rest_framework import mixins
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
 
 from api_v1.serializers.event_serializer import EventSerializer, FollowingEventsSerializer
-from core.models import Event, Employee  # Make sure to import your Employee model
 
 
 class EventView(viewsets.GenericViewSet):
