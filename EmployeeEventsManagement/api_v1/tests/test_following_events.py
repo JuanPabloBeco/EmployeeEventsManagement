@@ -18,13 +18,13 @@ TEST_EMPLOYEE_2 = {
 }
 
 TEST_EVENT_1 = {
-    "employee_id" : 1,
+    "employee_id" : 2,
     "date" : "2023-08-20",
     "type" : "Birth",
 }
 
 TEST_EVENT_2 = {
-    "employee_id" : 1,
+    "employee_id" : 2,
     "date" : "2023-08-31",
     "type" : "Enrollment",
 }
@@ -38,12 +38,11 @@ class FollowingEventsTest(TestCase):
     def test_following_events(self):
         client = Client()
 
+        employee0 = Employee.objects.create(**TEST_EMPLOYEE_1)
 
         event0 = Event.objects.create(**TEST_EVENT_1)
-        event0.save()
 
         event1 = Event.objects.create(**TEST_EVENT_2)
-        event1.save()
 
         data = {
             "start_date": "2023-08-20",

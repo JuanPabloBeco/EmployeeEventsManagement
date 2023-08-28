@@ -31,6 +31,15 @@ class Event(models.Model):
     type = models.CharField(choices=EventTypes.as_choices(), max_length=EventTypes.choices_max_len())
     date = models.DateField(default=timezone.now)
 
+
+    def save(self, *args, **kwargs):
+        existing_event = Event.objects.filter(employee=self.employee, type=self.type).first()
+        
+        if existing_event:
+           raise ValueError(f"An event of type '{self.type}' already exists for employee '{self.employee}'.")
+        else:
+            super().save(*args, **kwargs)
+
     def __str__(self):
         return f'{self.employee.first_name} {self.employee.last_name} {self.type} - {self.date}'
     
