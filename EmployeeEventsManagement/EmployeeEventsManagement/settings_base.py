@@ -148,7 +148,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRONJOBS = [
-    ('* * * * *', 'events_daily_report.cron.my_cron_test_job')
+    ('0 8 * * *', 'events_daily_report.cron.events_daily_report')
 ]
 
 EMAIL_BACKEND = os.environ.get('DJANGO_EMAIL_BACKEND')
@@ -159,4 +159,4 @@ EMAIL_PORT = os.environ.get('DJANGO_EMAIL_PORT')
 EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_HOST_PASSWORD')
 
-EMAIL_DAILY_REPORT_SUBSCRIPTORS = ['jpbecona@gmail.com',]
+EMAIL_DAILY_REPORT_SUBSCRIBERS = [] # Add subscribers to the daily event report here

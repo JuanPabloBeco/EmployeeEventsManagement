@@ -23,7 +23,7 @@ def send_report():
     text_content = strip_tags(html_content)
 
     host_email = getattr(settings, "EMAIL_HOST_USER", None)
-    subscription_list = getattr(settings, "EMAIL_DAILY_REPORT_SUBSCRIPTORS", None)
+    subscription_list = getattr(settings, "EMAIL_DAILY_REPORT_SUBSCRIBERS", None)
 
     email = EmailMultiAlternatives(
         "Events Daily report",
