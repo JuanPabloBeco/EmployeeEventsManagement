@@ -2,12 +2,15 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.decorators import action
-from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated 
 
 from api_v1.serializers.event_serializer import EventSerializer, FollowingEventsSerializer
 
 
 class EventView(viewsets.GenericViewSet):
+
+    permission_classes = (IsAuthenticated,)
+
     @action(methods=['post'], detail=False)
     def following(self, request):
         serializer = FollowingEventsSerializer(data=request.data)
