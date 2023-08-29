@@ -24,7 +24,7 @@ class EventSerializer(serializers.ModelSerializer):
 
 class FollowingEventsSerializer(serializers.Serializer):
     start_date = serializers.DateField()
-    date_range = serializers.IntegerField()
+    date_range = serializers.IntegerField(max_value=100, min_value=0)
 
     def get_following_events(self):
         following_events = get_events_in_range(self.validated_data["start_date"], self.validated_data["date_range"])

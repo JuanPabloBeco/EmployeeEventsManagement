@@ -26,11 +26,7 @@ TEST_EVENT_2 = {
 }
 
 def setup_DB():
-    employee = Employee.objects.create(
-        first_name="Juan Pablo",
-        last_name="Becoña",
-        email="jpbecona@gmail.com",
-    )
+    employee = Employee.objects.create(**TEST_EMPLOYEE_1)
 
     event0 = Event.objects.create(**TEST_EVENT_1)
     event1 = Event.objects.create(**TEST_EVENT_2)

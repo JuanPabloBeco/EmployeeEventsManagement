@@ -29,9 +29,11 @@ class EmployeeFilterSerializer(serializers.Serializer):
     first_name = serializers.CharField(required=False)
     last_name = serializers.CharField(required=False)
     email = serializers.EmailField(required=False)
-    is_active = serializers.BooleanField(required=False)
+    is_active = serializers.CharField(required=False)
 
     def validate_is_active(self, value):
-        if value not in [True, False, None]:
+        if value not in ['true', 'false']:
             raise serializers.ValidationError("Invalid value for is_active parameter")
         return value
+
+    

@@ -30,7 +30,7 @@ class EmployeeManagementTest(TestCase):
         pass
     
     def test_create_employee(self):
-        employee_data = TEST_EMPLOYEE_1
+        employee_data = TEST_EMPLOYEE_2
 
         response = self.client.post(
             "/api_v1/employee/", 
@@ -46,6 +46,45 @@ class EmployeeManagementTest(TestCase):
         self.assertEqual(created_employee.first().last_name, employee_data["last_name"], "Last_name not saved correctly")
         self.assertEqual(created_employee.first().email, employee_data["email"], "Email not saved correctly")
 
+    def test_create_employee_wrong_data(self):
+        employee_data = {**TEST_EMPLOYEE_1}
+
+        response = self.client.post(
+            "/api_v1/employee/", 
+            data=employee_data, 
+            content_type="application/json", 
+            headers={"Authorization": f"Token {self.token.key}"},
+        )
+        self.assertEqual(response.status_code, 400, "Two employees with the same email created")
+
+        employee_data = {**TEST_EMPLOYEE_2}
+        employee_data["first_name"] = False
+        response = self.client.post(
+            "/api_v1/employee/", 
+            data=employee_data, 
+            content_type="application/json", 
+            headers={"Authorization": f"Token {self.token.key}"},
+        )
+        self.assertEqual(response.status_code, 400, "Employee with invalid first_name created")
+
+        employee_data["last_name"] = False
+        response = self.client.post(
+            "/api_v1/employee/", 
+            data=employee_data, 
+            content_type="application/json", 
+            headers={"Authorization": f"Token {self.token.key}"},
+        )
+        self.assertEqual(response.status_code, 400, "Employee with invalid last_name created")
+
+        employee_data["email"] = "abcd"
+        response = self.client.post(
+            "/api_v1/employee/", 
+            data=employee_data, 
+            content_type="application/json", 
+            headers={"Authorization": f"Token {self.token.key}"},
+        )
+        self.assertEqual(response.status_code, 400, "Employee with invalid email created")
+        
     def test_create_employee_no_token(self):
         employee_data = TEST_EMPLOYEE_1
 
@@ -58,9 +97,10 @@ class EmployeeManagementTest(TestCase):
 
     def test_edit_put_employee(self):
         original_data = TEST_EMPLOYEE_1
-        employee = Employee.objects.create(**original_data)
+        employee = Employee.objects.get(**original_data)
 
         new_data = TEST_EMPLOYEE_2
+        
 
         response = self.client.put(
             f'/api_v1/employee/{employee.pk}/', 
@@ -75,9 +115,51 @@ class EmployeeManagementTest(TestCase):
         self.assertEqual(updated_employee.last_name, new_data["last_name"], "Last_name not updated")
         self.assertEqual(updated_employee.email, new_data["email"], "Email not updated")
 
+    def test_edit_put_employee_wrong_data(self):
+        original_data = TEST_EMPLOYEE_1
+        employee = Employee.objects.get(**original_data)
+
+        new_data = {**TEST_EMPLOYEE_2}
+
+        new_data["first_name"] = False
+        response = self.client.put(
+            f'/api_v1/employee/{employee.pk}/', 
+            data=new_data, 
+            content_type="application/json",
+            headers={"Authorization": f"Token {self.token.key}"},
+        )
+        self.assertEqual(response.status_code, 400, "Employee with invalid first_name edited")
+
+        new_data["last_name"] = False
+        response = self.client.put(
+            f'/api_v1/employee/{employee.pk}/', 
+            data=new_data, 
+            content_type="application/json",
+            headers={"Authorization": f"Token {self.token.key}"},
+        )
+        self.assertEqual(response.status_code, 400, "Employee with invalid last_name edited")
+
+        new_data["email"] = "abcd"
+        response = self.client.put(
+            f'/api_v1/employee/{employee.pk}/', 
+            data=new_data, 
+            content_type="application/json",
+            headers={"Authorization": f"Token {self.token.key}"},
+        )
+        self.assertEqual(response.status_code, 400, "Employee with invalid email edited")
+
+        new_data["is_active"] = "test"
+        response = self.client.put(
+            f'/api_v1/employee/{employee.pk}/', 
+            data=new_data, 
+            content_type="application/json",
+            headers={"Authorization": f"Token {self.token.key}"},
+        )
+        self.assertEqual(response.status_code, 400, "Employee with invalid is_active edited")
+        
     def test_edit_put_employee_no_token(self):
         original_data = TEST_EMPLOYEE_1
-        employee = Employee.objects.create(**original_data)
+        employee = Employee.objects.get(**original_data)
 
         new_data = TEST_EMPLOYEE_2
 
@@ -90,7 +172,7 @@ class EmployeeManagementTest(TestCase):
 
     def test_edit_patch_employee(self):
         original_data = TEST_EMPLOYEE_1
-        employee = Employee.objects.create(**original_data)
+        employee = Employee.objects.get(**original_data)
 
         new_data = {"is_active": "False"}
 
@@ -105,9 +187,49 @@ class EmployeeManagementTest(TestCase):
         updated_employee = Employee.objects.get(pk=employee.pk)
         self.assertEqual(str(updated_employee.is_active), new_data["is_active"], "is_active not updated")
 
+    def test_edit_patch_employee_wrong_data(self):
+        original_data = TEST_EMPLOYEE_1
+        employee = Employee.objects.get(**original_data)
+
+        new_data = {"first_name": False}
+        response = self.client.patch(
+            f'/api_v1/employee/{employee.pk}/', 
+            data=new_data,
+            content_type="application/json",
+            headers={"Authorization": f"Token {self.token.key}"},
+        )
+        self.assertEqual(response.status_code, 400, "Employee with invalid first_name edited")
+
+        new_data = {"last_name": False}
+        response = self.client.patch(
+            f'/api_v1/employee/{employee.pk}/', 
+            data=new_data,
+            content_type="application/json",
+            headers={"Authorization": f"Token {self.token.key}"},
+        )
+        self.assertEqual(response.status_code, 400, "Employee with invalid last_name edited")
+
+        new_data = {"email": "abcd"}
+        response = self.client.patch(
+            f'/api_v1/employee/{employee.pk}/', 
+            data=new_data,
+            content_type="application/json",
+            headers={"Authorization": f"Token {self.token.key}"},
+        )
+        self.assertEqual(response.status_code, 400, "Employee with invalid email edited")
+
+        new_data = {"is_active": "test"}
+        response = self.client.patch(
+            f'/api_v1/employee/{employee.pk}/', 
+            data=new_data,
+            content_type="application/json",
+            headers={"Authorization": f"Token {self.token.key}"},
+        )
+        self.assertEqual(response.status_code, 400, "Employee with invalid is_active edited")
+        
     def test_edit_patch_employee_no_token(self):
         original_data = TEST_EMPLOYEE_1
-        employee = Employee.objects.create(**original_data)
+        employee = Employee.objects.get(**original_data)
 
         new_data = {"is_active": "False"}
 
@@ -120,7 +242,7 @@ class EmployeeManagementTest(TestCase):
         self.assertEqual(response.status_code, 401, "Failed unauthorize endpoint access")
 
     def test_delete_employee(self):
-        original_data = TEST_EMPLOYEE_1
+        original_data = TEST_EMPLOYEE_2
         employee = Employee.objects.create(**original_data)
 
         response = self.client.delete(
@@ -133,8 +255,23 @@ class EmployeeManagementTest(TestCase):
         deleted_employee = Employee.objects.get(pk=employee.pk)
         self.assertEqual(str(deleted_employee.is_active), "False", "User was not deleted")
 
+    def test_delete_employee_wrong_data(self):
+        response = self.client.delete(
+            f'/api_v1/employee/test/',
+            content_type="application/json",
+            headers={"Authorization": f"Token {self.token.key}"},
+        )
+        self.assertEqual(response.status_code, 400, "Deleting with invalid id")
+
+        response = self.client.delete(
+            f'/api_v1/employee/1000/',
+            content_type="application/json",
+            headers={"Authorization": f"Token {self.token.key}"},
+        )
+        self.assertEqual(response.status_code, 404, "Deleting with wrong id")
+
     def test_delete_employee_no_token(self):
-        original_data = TEST_EMPLOYEE_1
+        original_data = TEST_EMPLOYEE_2
         employee = Employee.objects.create(**original_data)
 
         response = self.client.delete(
@@ -145,7 +282,7 @@ class EmployeeManagementTest(TestCase):
 
     def test_list_active_employees(self):
         employee_data_1 = TEST_EMPLOYEE_1
-        employee = Employee.objects.create(**employee_data_1)
+        employee = Employee.objects.get(**employee_data_1)
         employee_data_2 = TEST_EMPLOYEE_2
         employee_data_2["is_active"] = False
         employee = Employee.objects.create(**employee_data_2)
@@ -162,7 +299,7 @@ class EmployeeManagementTest(TestCase):
 
     def test_list_active_employees_no_token(self):
         employee_data_1 = TEST_EMPLOYEE_1
-        employee = Employee.objects.create(**employee_data_1)
+        employee = Employee.objects.get(**employee_data_1)
         employee_data_2 = TEST_EMPLOYEE_2
         employee_data_2["is_active"] = False
         employee = Employee.objects.create(**employee_data_2)
@@ -175,7 +312,7 @@ class EmployeeManagementTest(TestCase):
 
     def test_list_all_employees(self):
         employee_data_1 = TEST_EMPLOYEE_1
-        employee = Employee.objects.create(**employee_data_1)
+        employee = Employee.objects.get(**employee_data_1)
         employee_data_2 = TEST_EMPLOYEE_2
         employee_data_2["is_active"] = False
         employee = Employee.objects.create(**employee_data_2)
@@ -191,7 +328,7 @@ class EmployeeManagementTest(TestCase):
 
     def test_list_all_employees_no_token(self):
         employee_data_1 = TEST_EMPLOYEE_1
-        employee = Employee.objects.create(**employee_data_1)
+        employee = Employee.objects.get(**employee_data_1)
         employee_data_2 = TEST_EMPLOYEE_2
         employee_data_2["is_active"] = False
         employee = Employee.objects.create(**employee_data_2)
@@ -201,24 +338,17 @@ class EmployeeManagementTest(TestCase):
         )
         self.assertEqual(response.status_code, 401, "Failed unauthorize endpoint access")
 
-    def test_get_employee(self):
-        employee_data_1 = TEST_EMPLOYEE_1
-        employee = Employee.objects.create(**employee_data_1)
-
+    def test_get_employee_wrong_data(self):
         response = self.client.get(
-            f'/api_v1/employee/{employee.pk}/',
+            f'/api_v1/employee/1000/',
+            content_type="application/json",
             headers={"Authorization": f"Token {self.token.key}"},
         )
-        self.assertEqual(response.status_code, 200, "Failed to get employee")
-        
-        employee_retrieved = response.data
-        self.assertEqual(employee_retrieved["first_name"], employee.first_name, "First_name not retrieved correctly")
-        self.assertEqual(employee_retrieved["last_name"], employee.last_name, "Last_name not retrieved correctly")
-        self.assertEqual(employee_retrieved["email"], employee.email, "Email not retrieved correctly")
+        self.assertEqual(response.status_code, 404, "Get employee with wrong id")
 
     def test_get_employee_no_token(self):
         employee_data_1 = TEST_EMPLOYEE_1
-        employee = Employee.objects.create(**employee_data_1)
+        employee = Employee.objects.get(**employee_data_1)
 
         response = self.client.get(
             f'/api_v1/employee/{employee.pk}/',
@@ -227,24 +357,30 @@ class EmployeeManagementTest(TestCase):
 
     def test_search_employee(self):
         employee_data_1 = TEST_EMPLOYEE_1
-        employee = Employee.objects.create(**employee_data_1)
+        employee = Employee.objects.get(**employee_data_1)
 
         response = self.client.get(
-            f'/api_v1/employee/search/?first_name=JRR',
+            f'/api_v1/employee/search/?first_name={employee.first_name}',
             headers={"Authorization": f"Token {self.token.key}"},
         )
-        #response = client.get(f'/api_v1/employee/search')
-        self.assertEqual(response.status_code, 200, "Failed to get employee")
+        self.assertEqual(response.status_code, 200, "Failed to search employees")
         
         employee_searched = response.data[0]
         self.assertEqual(employee_searched["first_name"], employee.first_name, "First_name not saved correctly")
         self.assertEqual(employee_searched["last_name"], employee.last_name, "Last_name not saved correctly")
         self.assertEqual(employee_searched["email"], employee.email, "Email not saved correctly")
 
-    def test_search_employee_no_token(self):
+    def test_search_employee_wrong_data(self):
         employee_data_1 = TEST_EMPLOYEE_1
-        employee = Employee.objects.create(**employee_data_1)
+        employee = Employee.objects.get(**employee_data_1)
 
+        response = self.client.get(
+            f'/api_v1/employee/search/?is_active=test',
+            headers={"Authorization": f"Token {self.token.key}"},
+        )
+        self.assertEqual(response.status_code, 400, "Two employees with the same email created")
+
+    def test_search_employee_no_token(self):
         response = self.client.get(
             f'/api_v1/employee/search/?first_name=JRR',
         )
