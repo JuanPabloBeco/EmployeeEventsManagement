@@ -20,5 +20,4 @@ class HolidaysView(
         if (holidays.get("error")):
             return Response("Internal Server Error", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        serialized = json.dumps(holidays)
-        return Response(serialized, status=status.HTTP_200_OK)
+        return Response(holidays, status=status.HTTP_200_OK)

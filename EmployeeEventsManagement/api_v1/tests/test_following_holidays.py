@@ -25,7 +25,7 @@ class FollowingHolidaysTest(TestCase):
 
         self.assertEqual(response.status_code, 200, "Failed to get holidays")
 
-        holidays_retrieved = json.loads(response.data)
+        holidays_retrieved = response.data
         self.assertEqual(len(holidays_retrieved), 3, "Amount of days of the answer not filled correctly")
 
     def test_following_holidays_no_token(self):
