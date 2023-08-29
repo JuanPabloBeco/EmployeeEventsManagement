@@ -3,8 +3,14 @@ from core.models import Event, Employee
 from core.utils.get_events_in_range import get_events_in_range
 
 
+    
+class EmployeeModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = '__all__'
+
 class EventSerializer(serializers.ModelSerializer):
-    #employee = serializers.PrimaryKeyRelatedField(many=True, queryset=Employee.objects.all())
+    employee = EmployeeModelSerializer(read_only=True)
 
     class Meta:
         model = Event

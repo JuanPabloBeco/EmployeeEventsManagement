@@ -1,7 +1,19 @@
-from core.models import Employee
+from core.models import Employee, Event
 from rest_framework import serializers
 
+
+class EventModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = [
+            "id",
+            "type",
+            "date",
+        ]
+
 class EmployeeSerializer(serializers.ModelSerializer):
+    events = EventModelSerializer(many=True, read_only=True)
+
     class Meta:
         model = Employee
         fields = [
@@ -10,6 +22,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
             'last_name',
             'email',
             'is_active',
+            'events',
             ]
 
 class EmployeeFilterSerializer(serializers.Serializer):
