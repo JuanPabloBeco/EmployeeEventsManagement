@@ -53,6 +53,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
+    'DATE_FORMAT': "%m/%d/%Y",
+    'DATE_INPUT_FORMATS': ["%m/%d/%Y", 'iso-8601'],
 }
 
 MIDDLEWARE = [

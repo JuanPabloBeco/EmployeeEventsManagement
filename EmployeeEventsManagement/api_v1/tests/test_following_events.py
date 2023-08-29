@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.test import Client
 from core.models import Employee, Event
 
+from datetime import datetime
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 
@@ -24,7 +25,7 @@ class FollowingEventsTest(TestCase):
         event1 = Event.objects.get(id=2)
 
         data = {
-            "start_date": "2023-08-20",
+            "start_date": "08/20/2023",
             "date_range": 10,
         }
 
@@ -40,13 +41,13 @@ class FollowingEventsTest(TestCase):
 
         events_retrieved = response.data[0]
         self.assertEqual(events_retrieved["id"], event0.id, "Id not retrieved correctly")
-        self.assertEqual(events_retrieved["date"], event0.date, "Date not retrieved correctly")
+        self.assertEqual(datetime.strptime(events_retrieved["date"],"%m/%d/%Y").date(), event0.date, "Date not retrieved correctly")     
         self.assertEqual(events_retrieved["type"], event0.type, "Type not retrieved correctly")
 
     def test_following_events_no_token(self):
         data = {
-            "start_date": "2023-08-20",
-            "date_range": 10,
+                "start_date": "08/20/2023",
+                "date_range": 10,
         }
 
         response = self.client.post(
